@@ -59,7 +59,12 @@ cdr(struct list* lst){
 
 static inline atomic
 car(struct list* lst){
-  return lst->atom;
+  atomic res;
+  if(lst)
+    res = lst->atom;
+  else
+    res.type = NONE;
+  return res;
 }
 
 static inline void
@@ -80,6 +85,30 @@ lfree(struct list *lst){
     }
     free(lst);
   }
+}
+
+static inline unsigned long
+len(struct list* lst){
+  unsigned long result = 0;
+  do{
+    if(lst->atom.type != NONE)
+      result++;
+    lst = lst->next;
+  }while(lst);
+  return result;
+}
+
+static inline void*
+pop(struct list **plst){
+  struct list *var = *plst;
+  void *res;
+  if(var){
+    *plst = var->next;
+    res = var->atom.data;
+  } else{
+    res = NULL;
+  }
+  return res;
 }
 
 
@@ -111,11 +140,3 @@ lfree(struct list *lst){
       (((plst)->atom.data)?(plst):NULL);		 \
     })
 
-#define pop(pplst) ({						       \
-  /* pplst - pplist */                                                         \
-  struct list *var = *(pplst);                                                 \
-  (var)?                                                                       \
-    ({*(pplst) = (*(pplst))->next;					\
-      var->atom.data;}):			\
-  NULL;                                                                        \
-    })

@@ -6,8 +6,6 @@ int
 main() {
   struct list *a = create();
   struct list *b = create();
-  struct list *c;
-  /* pplist pb = &b; */
   struct list *r1;
   int r2;
   b = push(11, int, ATOM, b);
@@ -30,18 +28,19 @@ main() {
     printf("Error\n");
     return -1;
   }
-  c=b;
+  printf("a.len = %d\nb.len = %d\n", len(a), len(b));
   print(b);
   fputs("========================\n", stdout);
   printf("car(b = )");
   print((struct list*)get(car(b)));
   printf("car(cdr(b)) = %d\n", *((int*)get(car(cdr(b)))));
-  r1 = pop(&b);
+  r1 = (struct list*)pop(&b);
   fputs("Print b\n", stdout);
   print(b);
   fputs("Print r1\n", stdout);
   print(r1);
   r2 = *((int*)(pop(&b)));
+  printf("r2 = %d\n", r2);
   fputs("Print b\n", stdout);
   print(b);
   lfree(b);
